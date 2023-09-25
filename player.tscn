@@ -86,6 +86,7 @@ size = Vector2(12, 15)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_umq0i")
+metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1

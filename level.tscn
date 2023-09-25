@@ -1,13 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://cgewrdgf8spa4"]
+[gd_scene load_steps=6 format=3 uid="uid://cgewrdgf8spa4"]
 
 [ext_resource type="PackedScene" uid="uid://dvm35djc1l11a" path="res://tile_map.tscn" id="1_41rvv"]
+[ext_resource type="Script" path="res://level.gd" id="1_o128b"]
 [ext_resource type="PackedScene" uid="uid://ck25q6j1wcis1" path="res://player.tscn" id="2_m7yv8"]
-[ext_resource type="Script" path="res://DeathZone.gd" id="3_bejbm"]
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_rw1go"]
 b = Vector2(5000, 0)
 
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_bmyeh"]
+b = Vector2(0, 400)
+
 [node name="Level" type="Node2D"]
+script = ExtResource("1_o128b")
 
 [node name="TileMap" parent="." instance=ExtResource("1_41rvv")]
 
@@ -15,10 +19,16 @@ b = Vector2(5000, 0)
 
 [node name="DeathZone" type="Area2D" parent="."]
 position = Vector2(-1561, 470)
-script = ExtResource("3_bejbm")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeathZone"]
 shape = SubResource("SegmentShape2D_rw1go")
 
-[connection signal="body_entered" from="DeathZone" to="Player" method="_on_death_zone_body_entered"]
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-336, 24)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("SegmentShape2D_bmyeh")
+
+[connection signal="body_entered" from="DeathZone" to="." method="_on_death_zone_body_entered"]

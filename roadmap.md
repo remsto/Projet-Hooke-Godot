@@ -1,15 +1,17 @@
 # Roadmap
 
 ## A Faire
-* Déplacement dans un niveau, avec limites
-* Animation mort
-* Mort lors de la sortie du niveau (notamment en bas)
+* Course
+* Accélération horizontale
 * Réapparition
-* GUI de mort
 * GUI de pause
 * Grappin
 * Animation saut
+* Animation mort
 * Améliorer animation (images floues)
 
-# Fait
+## Fait
 * Animation marche 
+* Mort lors de la sortie du niveau (notamment en bas)
+* Déplacement dans un niveau, avec limites
+* GUI de mort

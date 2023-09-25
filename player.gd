@@ -9,7 +9,11 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 var screen_size
 
+signal death
+
 func _ready():
+	position.x = 0.0
+	position.y = 0.0
 	$AnimatedSprite2D.animation = "idle"
 	$AnimatedSprite2D.play()
 	screen_size = get_viewport_rect().size
@@ -38,9 +42,16 @@ func _physics_process(delta):
 	move_and_slide()
 #	position = position.clamp(Vector2.ZERO, screen_size)
 
-
-func _on_death_zone_body_entered(body):
-	'''
-	Death of the player
-	'''
-	queue_free()
+#func die():
+#	'''
+#	Death of the player
+#	'''
+#	death.emit()
+#	queue_free()
+#
+#func _on_death_zone_body_entered(body):
+#	'''
+#	Death of the player
+#	'''
+#	print("oiuuiuisdcoiveqiu")
+#	die()

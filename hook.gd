@@ -1,7 +1,7 @@
 extends Area2D
 
-@export var max_stretch : float = 10.0
-@export var stretch_speed : float = 30.0
+@export var max_stretch : float = 15.0
+@export var stretch_speed : float = 40.0
 
 var pos_speed : float
 var hook_speed : float
@@ -23,6 +23,14 @@ func _ready():
 func _process(delta):
 	pass
 		
+func reset_hook():
+	scale = Vector2(1.0, 1.0)
+	position = Vector2(1.0, 1.0)	
+	rotation = 0.0	
+	is_active = false
+	is_extending = false
+	is_pulling = false
+
 func _physics_process(delta):
 	if Input.is_action_just_pressed("hook"):
 		hook_direction = get_local_mouse_position().normalized()
@@ -30,7 +38,6 @@ func _physics_process(delta):
 		is_active = true
 		is_extending = true
 	if is_active:
-		var init_x_pos = Vector2(0.0, 0.0)
 		# Extension phase
 		if is_extending:
 			scale.x = move_toward(scale.x, max_stretch, stretch_speed*delta)
@@ -45,7 +52,4 @@ func _physics_process(delta):
 			scale.x = move_toward(scale.x, 1.0, stretch_speed*delta)
 			position -= hook_direction*pos_speed*delta
 			if scale.x == 1.0:
-				position = init_x_pos
-				rotation = 0.0
-				is_active = false
-				is_pulling = false
+				reset_hook()

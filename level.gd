@@ -16,10 +16,12 @@ func _process(delta):
 func _on_death_menu_restart():
 	var player = player_scene.instantiate()
 	add_child(player)
+	$Player.death.connect(_on_player_death)
 
 
 
 func _on_player_death():
+	$Player.queue_free()
 	player_death.emit()
 
 

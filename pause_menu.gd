@@ -1,5 +1,6 @@
-extends Camera2D
+extends Node2D
 
+signal unpause
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -9,4 +10,9 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
-#	position = get_node('..').position
+
+
+
+func _on_continue_button_pressed():
+	unpause.emit()
+	hide()

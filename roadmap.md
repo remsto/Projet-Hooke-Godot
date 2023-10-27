@@ -1,17 +1,18 @@
 # Roadmap
 
 ## A Faire
-* Frottements au sol (Pas de frottements dans les airs)
 * Damping (contrôle de l'accelération)
-* Nuances de saut (diviser la vitesse lorsque bouton de saut relaché)
-* GUI de pause
+* Multiples Niveaux
+* Centrer le menu de pause
 * Police d'écriture stylée
 * Animation saut
 * Animation mort
 * Améliorer animation (images floues)
-* Multiples Niveaux
 
 ## Fait
+* Nuances de saut au sol(diviser la vitesse lorsque bouton de saut relaché)
+* Frottements au sol (Pas de frottements dans les airs)
+* GUI de pause
 * Piques qui tuent
 * Saut pendant grappin
 * Saut possible juste avant d'aterrir (Jump buffer)

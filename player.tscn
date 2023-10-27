@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ck25q6j1wcis1"]
+[gd_scene load_steps=20 format=3 uid="uid://ck25q6j1wcis1"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_umq0i"]
 [ext_resource type="Texture2D" uid="uid://e2gsjykakfn" path="res://thief/thief_idle_1.png" id="2_41j55"]
@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://dowcppkp0qvwx" path="res://thief/thief_idle_7.png" id="8_yx117"]
 [ext_resource type="Texture2D" uid="uid://ck2jbklxn4eco" path="res://thief/thief_idle_8.png" id="9_x2w20"]
 [ext_resource type="Texture2D" uid="uid://rwix01tc025a" path="res://thief/thief_walk_1.png" id="10_3s06d"]
-[ext_resource type="Script" path="res://PlayerCamera.gd" id="10_yvsif"]
 [ext_resource type="Texture2D" uid="uid://3mm0wqaf2bxl" path="res://thief/thief_walk_2.png" id="11_36e5a"]
 [ext_resource type="Texture2D" uid="uid://dc708udycwyk" path="res://thief/thief_walk_3.png" id="12_rav23"]
 [ext_resource type="Texture2D" uid="uid://bne81tvmxtqws" path="res://thief/thief_walk_4.png" id="13_afmp0"]
@@ -104,6 +103,5 @@ shape = SubResource("RectangleShape2D_050xh")
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
 drag_horizontal_enabled = true
-script = ExtResource("10_yvsif")
 
 [node name="Hook" parent="." instance=ExtResource("18_mpoit")]

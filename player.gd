@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 const ACCEL = 200.0
 const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
+const JUMP_VELOCITY = -600.0
 const JUMP_BUFFER_SIZE = 6
 const GROUND_BUFFER_SIZE = 6
 
@@ -11,6 +11,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var screen_size
 var jump_buffer : Array
 var ground_buffer : Array
+var is_ground_jumping : bool
 
 signal death
 
@@ -19,6 +20,8 @@ func _ready():
 	$AnimatedSprite2D.play()
 	screen_size = get_viewport_rect().size
 	jump_buffer = []
+	ground_buffer = []
+	is_ground_jumping = false
 	for i in range(JUMP_BUFFER_SIZE):
 		jump_buffer.append(false)
 	for i in range(GROUND_BUFFER_SIZE):
@@ -39,9 +42,8 @@ func reset_bool_buffer(buffer : Array) -> void:
 
 func _physics_process(delta):
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	var direction = Input.get_axis("left", "right")
-	# Handle jump and jump buffer
+	# Handle buffers
 	var does_jump = process_bool_buffer(jump_buffer, Input.is_action_just_pressed("jump"))
 	var does_be_floor = process_bool_buffer(ground_buffer, is_on_floor())
 	var accel
@@ -55,10 +57,15 @@ func _physics_process(delta):
 			velocity.y = JUMP_VELOCITY
 			reset_bool_buffer(jump_buffer)
 			reset_bool_buffer(ground_buffer)
+			is_ground_jumping = true
+		if is_ground_jumping and Input.is_action_just_released("jump"):
+			velocity.y /= 5.0
+		if velocity.y > 0.0:
+			is_ground_jumping = false
 		accel = ACCEL
 		max_speed = SPEED
 		if direction:
-			if direction*velocity.x < max_speed:
+			if (direction*velocity.x < max_speed) or is_on_floor():
 				velocity.x = move_toward(velocity.x, direction*max_speed, accel)
 			$AnimatedSprite2D.animation = "walk"
 			$AnimatedSprite2D.flip_h = velocity.x < 0
@@ -66,6 +73,7 @@ func _physics_process(delta):
 			velocity.x = move_toward(velocity.x, 0, ACCEL)
 			$AnimatedSprite2D.animation = "idle"
 	else:
+		is_ground_jumping = false
 		set_velocity(Vector2(0.0, 0.0))
 		if $Hook.is_pulling:
 			velocity = $Hook.hook_speed * $Hook.hook_direction

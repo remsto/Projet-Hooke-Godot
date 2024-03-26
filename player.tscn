@@ -105,3 +105,7 @@ shape = SubResource("RectangleShape2D_050xh")
 drag_horizontal_enabled = true
 
 [node name="Hook" parent="." instance=ExtResource("18_mpoit")]
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

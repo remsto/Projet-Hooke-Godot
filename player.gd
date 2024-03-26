@@ -5,7 +5,9 @@ const SPEED = 300.0
 const JUMP_VELOCITY = -600.0
 const JUMP_BUFFER_SIZE = 6
 const GROUND_BUFFER_SIZE = 6
-enum State {IDLE, WALKING, JUMPING, FALLING, HOOK_EXTEND, HOOK_PULL}
+enum State {IDLE, WALKING, # Grounded states
+			GROUND_JUMPING, JUMPING, FALLING, # Airborne states
+			HOOK_EXTEND, HOOK_PULL} # Hook states
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -50,6 +52,7 @@ func _physics_process(delta):
 	var direction = Input.get_axis("left", "right")
 	var does_jump = process_bool_buffer(jump_buffer, Input.is_action_just_pressed("jump"))
 	var does_be_floor = process_bool_buffer(ground_buffer, is_on_floor())
+	var does_ground_jump = false
 	# Determine the state on simple conditions
 	if $Hook.is_extending:
 		state = State.HOOK_EXTEND
@@ -60,11 +63,15 @@ func _physics_process(delta):
 			state = State.WALKING
 		else:
 			state = State.IDLE
-	else: # Not on floor TODO
-		if velocity.y < 0:
+	else: # Not on floor 
+		if velocity.y < 0 and state == State.GROUND_JUMPING and \
+		(Input.is_action_pressed("jump") or Input.is_action_just_released("jump")):
+			state = State.GROUND_JUMPING
+		elif velocity.y < 0:
 			state = State.JUMPING
 		else:
 			state = State.FALLING
+	$Label.text = State.keys()[state]
 	# Update the animation
 	$AnimatedSprite2D.flip_h = velocity.x < 0
 	if state == State.WALKING:
@@ -80,23 +87,27 @@ func _physics_process(delta):
 			velocity.y = JUMP_VELOCITY
 			reset_bool_buffer(jump_buffer)
 			reset_bool_buffer(ground_buffer)
+			state = State.GROUND_JUMPING
+			does_ground_jump = true
 		if not direction: # Deceleration
 			velocity.x = move_toward(velocity.x, 0, ACCEL)
-	if state in [State.JUMPING, State.FALLING]: # Handle Gravity airborne
+	if state in [State.JUMPING, State.FALLING, State.GROUND_JUMPING]: # Handle Gravity airborne
 		velocity.y += gravity * delta
 		# Handle direction airborne: move only if does not "slow down" the character
 		if direction and (direction*velocity.x < SPEED): 
 			velocity.x = move_toward(velocity.x, direction*SPEED, ACCEL)
 		if not direction: # Deceleration
 			velocity.x = move_toward(velocity.x, 0, ACCEL)
-	if state in [State.JUMPING]: # Handle Jump Variations
+	if state in [State.GROUND_JUMPING]: # Handle Jump Variations
 		if Input.is_action_just_released("jump"):
-			velocity.y /= 2.0
+			velocity.y /= 3.0
 	if state in [State.FALLING]:
 		if does_be_floor and does_jump: # Handle the "roll jump"
 			velocity.y = JUMP_VELOCITY
 			reset_bool_buffer(jump_buffer)
 			reset_bool_buffer(ground_buffer)
+			state = State.GROUND_JUMPING			
+			does_ground_jump = true
 	if state in [State.HOOK_EXTEND]:
 		set_velocity(Vector2(0.0, 0.0))
 	if state in [State.HOOK_PULL]:

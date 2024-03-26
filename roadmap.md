@@ -1,13 +1,16 @@
 # Roadmap
 
 ## A Faire
-* Damping (contrôle de l'accelération)
-* Multiples Niveaux
+* Premier niveau
+* Wall Jump
+* Grapin qui accroche le mur
+* Système de Niveaux
 * Centrer le menu de pause
 * Police d'écriture stylée
 * Animation saut
 * Animation mort
 * Améliorer animation (images floues)
+* Damping (contrôle de l'accelération) ??? : Physique OK je pense, probablement pas de modifications futures
 
 ## Fait
 * Nuances de saut au sol(diviser la vitesse lorsque bouton de saut relaché)

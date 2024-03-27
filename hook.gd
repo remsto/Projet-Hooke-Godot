@@ -32,7 +32,7 @@ func reset_hook():
 	is_pulling = false
 
 func _physics_process(delta):
-	if Input.is_action_just_pressed("hook"):
+	if Input.is_action_just_pressed("hook") and not is_active:
 		hook_direction = get_local_mouse_position().normalized()
 		rotation = hook_direction.angle()
 		is_active = true

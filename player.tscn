@@ -109,3 +109,7 @@ drag_horizontal_enabled = true
 [node name="Label" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
+
+[node name="ColliderLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

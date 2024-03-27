@@ -2,9 +2,6 @@
 
 ## A Faire
 * Premier niveau
-* Boost
-* Wall Jump*
-* Moins de frottements en l'air
 * Grapin qui accroche le mur
 * Système de Niveaux
 * Centrer le menu de pause
@@ -15,6 +12,9 @@
 * Damping (contrôle de l'accelération) ??? : Physique OK je pense, probablement pas de modifications futures
 
 ## Fait
+* Moins de frottements en l'air
+* Boost
+* Wall Jump
 * Nuances de saut au sol(diviser la vitesse lorsque bouton de saut relaché)
 * Frottements au sol 
 * GUI de pause

@@ -2,7 +2,6 @@
 
 ## A Faire
 * Premier niveau
-* Grapin qui accroche le mur
 * Système de Niveaux
 * Centrer le menu de pause
 * Police d'écriture stylée
@@ -12,6 +11,7 @@
 * Damping (contrôle de l'accelération) ??? : Physique OK je pense, probablement pas de modifications futures
 
 ## Fait
+* Grapin qui accroche le mur
 * Moins de frottements en l'air
 * Boost
 * Wall Jump

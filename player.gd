@@ -22,6 +22,7 @@ var screen_size
 var jump_buffer : Array
 var ground_buffer : Array
 var is_ground_jumping : bool
+var wall_direction 
 var state = State.IDLE
 
 signal death
@@ -54,33 +55,46 @@ func process_bool_buffer(buffer : Array, new_value : bool) -> bool:
 func reset_bool_buffer(buffer : Array) -> void:
 	for i in range(buffer.size()):
 		buffer[i] = false
+		
+func ray_cast(ray_length, threshold):
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsRayQueryParameters2D.create(global_position, global_position+Vector2(ray_length, 0))
+	var result = space_state.intersect_ray(query)
+	return result and abs(global_position.x - result.position.x) <= threshold
+	
 
 func _physics_process(delta):
 	var direction = Input.get_axis("left", "right")
 	var does_jump = process_bool_buffer(jump_buffer, Input.is_action_just_pressed("jump"))
 	var does_be_floor = process_bool_buffer(ground_buffer, is_on_floor())
-	var wall_direction 
+
 	# Determine the state on simple conditions
 	if $Hook.is_extending:
 		state = State.HOOK_EXTEND
 	elif $Hook.is_pulling:
 		state = State.HOOK_PULL
+		# Raycast to handle wall slide/jump.
+		if ray_cast(-RAY_CAST_LENGTH, WALL_SLIDE_THRESH_LEFT):
+			$Hook.reset_hook()
+			state = State.WALL_CLINGED
+			wall_direction = 1
+		elif ray_cast(RAY_CAST_LENGTH, WALL_SLIDE_THRESH_RIGHT):
+			$Hook.reset_hook()			
+			state = State.WALL_CLINGED
+			wall_direction = -1
 	elif is_on_floor():
 		if direction:
 			state = State.WALKING
 		else:
 			state = State.IDLE
 	else: # Not on floor
+		if state == State.WALL_CLINGED:
+			pass
 		# Raycast to handle wall slide/jump. Might be refactored ?? 
-		var space_state = get_world_2d().direct_space_state
-		var query_right = PhysicsRayQueryParameters2D.create(global_position, global_position+Vector2(RAY_CAST_LENGTH, 0))
-		var query_left = PhysicsRayQueryParameters2D.create(global_position, global_position+Vector2(-RAY_CAST_LENGTH, 0))
-		var result_right = space_state.intersect_ray(query_right)
-		var result_left = space_state.intersect_ray(query_left)
-		if result_left and abs(global_position.x - result_left.position.x) <= WALL_SLIDE_THRESH_LEFT:
+		elif ray_cast(-RAY_CAST_LENGTH, WALL_SLIDE_THRESH_LEFT):
 			state = State.WALL_SLIDING
 			wall_direction = 1
-		elif result_right and abs(global_position.x - result_right.position.x) <= WALL_SLIDE_THRESH_RIGHT:
+		elif ray_cast(RAY_CAST_LENGTH, WALL_SLIDE_THRESH_RIGHT):
 			state = State.WALL_SLIDING
 			wall_direction = -1
 		elif velocity.y < 0:
@@ -117,6 +131,14 @@ func _physics_process(delta):
 			is_ground_jumping = true
 		if not direction: # Deceleration
 			velocity.x = move_toward(velocity.x, 0, ACCEL)
+	if state in [State.WALL_CLINGED]:
+		velocity = Vector2(0.0, 0.0)
+		if does_jump:
+			state = State.JUMPING
+			velocity.y = JUMP_VELOCITY
+			velocity.x = -JUMP_VELOCITY*wall_direction
+			reset_bool_buffer(jump_buffer)
+			reset_bool_buffer(ground_buffer)
 	if state in [State.JUMPING, State.FALLING, State.WALL_SLIDING]: # Handle Gravity airborne
 		velocity.y += gravity * delta
 		# Jump variation

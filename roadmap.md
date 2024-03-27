@@ -2,7 +2,9 @@
 
 ## A Faire
 * Premier niveau
-* Wall Jump
+* Boost
+* Wall Jump*
+* Moins de frottements en l'air
 * Grapin qui accroche le mur
 * Système de Niveaux
 * Centrer le menu de pause
@@ -14,7 +16,7 @@
 
 ## Fait
 * Nuances de saut au sol(diviser la vitesse lorsque bouton de saut relaché)
-* Frottements au sol (Pas de frottements dans les airs)
+* Frottements au sol 
 * GUI de pause
 * Piques qui tuent
 * Saut pendant grappin

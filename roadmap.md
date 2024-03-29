@@ -11,6 +11,7 @@
 * Damping (contrôle de l'accelération) ??? : Physique OK je pense, probablement pas de modifications futures
 
 ## Fait
+* Wall_cling: régler le fait qu'on ne puisse pas "glisser" sur un mur avec le grappin car on wall cling instantanément
 * Grapin qui accroche le mur
 * Moins de frottements en l'air
 * Boost

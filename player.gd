@@ -4,24 +4,28 @@ const ACCEL = 200.0
 const AIR_IDLE_ACCEL = ACCEL/20.0
 const SPEED = 300.0
 const JUMP_VELOCITY = -800.0
+const WALL_JUMP_VELOCITY = 400.0
 const JUMP_BUFFER_SIZE = 6
 const GROUND_BUFFER_SIZE = 6
 const JUMP_DIVIDE = 3.0
-const BOOST_MULT = 1.5
+const BOOST_MULT = 1.2
 const WALL_SLIDE_THRESH_LEFT = 11.0
 const WALL_SLIDE_THRESH_RIGHT = 16.0
 const RAY_CAST_LENGTH = 30.0
+const WALL_JUMP_TIME = 5
 enum State {IDLE, WALKING, # Grounded states
 			JUMPING, FALLING, # Airborne states
 			HOOK_EXTEND, HOOK_PULL, # Hook states
 			WALL_SLIDING, WALL_CLINGED} # Wall states
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") * 1.3
 var screen_size
 var jump_buffer : Array
 var ground_buffer : Array
 var is_ground_jumping : bool
+var is_wall_jumping : bool
+var wall_jump_counter
 var wall_direction 
 var state = State.IDLE
 
@@ -34,6 +38,9 @@ func _ready():
 	jump_buffer = []
 	ground_buffer = []
 	is_ground_jumping = false
+	is_wall_jumping = false
+#	wall_jump_timer.one_shot = false
+	wall_jump_counter = 0
 	for i in range(JUMP_BUFFER_SIZE):
 		jump_buffer.append(false)
 	for i in range(GROUND_BUFFER_SIZE):
@@ -74,11 +81,11 @@ func _physics_process(delta):
 	elif $Hook.is_pulling:
 		state = State.HOOK_PULL
 		# Raycast to handle wall slide/jump.
-		if ray_cast(-RAY_CAST_LENGTH, WALL_SLIDE_THRESH_LEFT):
+		if $Hook.scale.x <= 2.0 and ray_cast(-RAY_CAST_LENGTH, WALL_SLIDE_THRESH_LEFT):
 			$Hook.reset_hook()
 			state = State.WALL_CLINGED
 			wall_direction = 1
-		elif ray_cast(RAY_CAST_LENGTH, WALL_SLIDE_THRESH_RIGHT):
+		elif $Hook.scale.x <= 2.0 and ray_cast(RAY_CAST_LENGTH, WALL_SLIDE_THRESH_RIGHT):
 			$Hook.reset_hook()			
 			state = State.WALL_CLINGED
 			wall_direction = -1
@@ -134,9 +141,10 @@ func _physics_process(delta):
 	if state in [State.WALL_CLINGED]:
 		velocity = Vector2(0.0, 0.0)
 		if does_jump:
+			wall_jump_counter = WALL_JUMP_TIME
 			state = State.JUMPING
 			velocity.y = JUMP_VELOCITY
-			velocity.x = -JUMP_VELOCITY*wall_direction
+			velocity.x = WALL_JUMP_VELOCITY*wall_direction
 			reset_bool_buffer(jump_buffer)
 			reset_bool_buffer(ground_buffer)
 	if state in [State.JUMPING, State.FALLING, State.WALL_SLIDING]: # Handle Gravity airborne
@@ -144,15 +152,19 @@ func _physics_process(delta):
 		# Jump variation
 		if is_ground_jumping and Input.is_action_just_released("jump"):
 			velocity.y /= JUMP_DIVIDE
-		# Handle direction airborne: move only if does not "slow down" the character
-		if direction and (direction*velocity.x < SPEED): 
-			velocity.x = move_toward(velocity.x, direction*SPEED, ACCEL)
-		if not direction: # Deceleration
-			velocity.x = move_toward(velocity.x, 0, AIR_IDLE_ACCEL)
+		if wall_jump_counter: # 
+			wall_jump_counter -= 1
+		else:
+			# Handle direction airborne: move only if does not "slow down" the character
+			if direction and (direction*velocity.x < SPEED): 
+				velocity.x = move_toward(velocity.x, direction*SPEED, ACCEL)
+			if not direction: # Deceleration
+				velocity.x = move_toward(velocity.x, 0, AIR_IDLE_ACCEL)
 	if state in [State.WALL_SLIDING]: # Handle wall jump
 		if does_jump:
+			wall_jump_counter = WALL_JUMP_TIME			
 			velocity.y = JUMP_VELOCITY
-			velocity.x = -JUMP_VELOCITY*wall_direction
+			velocity.x = WALL_JUMP_VELOCITY*wall_direction
 			reset_bool_buffer(jump_buffer)
 			reset_bool_buffer(ground_buffer)
 	if state in [State.FALLING]:

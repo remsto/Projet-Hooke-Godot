@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://dfnk5x3f8a2a1"]
+
+[ext_resource type="Script" path="res://game.gd" id="1_m2xdm"]
+[ext_resource type="PackedScene" uid="uid://cgewrdgf8spa4" path="res://level.tscn" id="2_t4nwd"]
+[ext_resource type="PackedScene" uid="uid://pw7qqqk77spc" path="res://death_menu.tscn" id="4_ep44l"]
+[ext_resource type="PackedScene" uid="uid://cklhq7kpgqtrk" path="res://pause_menu.tscn" id="5_2epjg"]
+
+[node name="Game" type="Node"]
+script = ExtResource("1_m2xdm")
+
+[node name="Level" parent="." instance=ExtResource("2_t4nwd")]
+
+[node name="DeathMenu" parent="." instance=ExtResource("4_ep44l")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("5_2epjg")]
+process_mode = 3
+
+[connection signal="player_death" from="Level" to="." method="_on_level_player_death"]
+[connection signal="restart" from="DeathMenu" to="Level" method="_on_death_menu_restart"]
+[connection signal="unpause" from="PauseMenu" to="." method="_on_pause_menu_unpause"]

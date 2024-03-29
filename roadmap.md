@@ -4,6 +4,7 @@
 * Premier niveau
 * Système de Niveaux
 * Centrer le menu de pause
+* Refactor les signaux, surtout ceux de mort ?
 * Police d'écriture stylée
 * Animation saut
 * Animation mort

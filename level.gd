@@ -2,10 +2,11 @@ extends Node2D
 
 signal player_death
 
-@export var player_scene : PackedScene
+var player_scene : PackedScene
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	player_scene = preload("res://player.tscn")
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

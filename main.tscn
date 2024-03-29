@@ -1,23 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://dfnk5x3f8a2a1"]
+[gd_scene load_steps=4 format=3 uid="uid://1skkomvvjs3k"]
 
-[ext_resource type="PackedScene" uid="uid://cgewrdgf8spa4" path="res://level.tscn" id="1_1ak6c"]
-[ext_resource type="Script" path="res://main.gd" id="1_su8t5"]
-[ext_resource type="PackedScene" uid="uid://pw7qqqk77spc" path="res://death_menu.tscn" id="2_g48nd"]
-[ext_resource type="PackedScene" uid="uid://ck25q6j1wcis1" path="res://player.tscn" id="3_wn4bg"]
-[ext_resource type="PackedScene" uid="uid://cklhq7kpgqtrk" path="res://pause_menu.tscn" id="5_10of6"]
+[ext_resource type="Script" path="res://main.gd" id="1_f0fwl"]
+[ext_resource type="PackedScene" uid="uid://cbp4xwl4bjr7p" path="res://main_title.tscn" id="2_2j2t0"]
+[ext_resource type="PackedScene" uid="uid://dupo7lt8256fe" path="res://level_menu.tscn" id="3_7uyx5"]
 
 [node name="Main" type="Node"]
-script = ExtResource("1_su8t5")
-death_menu_scene = ExtResource("2_g48nd")
+script = ExtResource("1_f0fwl")
 
-[node name="Level" parent="." instance=ExtResource("1_1ak6c")]
-player_scene = ExtResource("3_wn4bg")
+[node name="MainTitle" parent="." instance=ExtResource("2_2j2t0")]
 
-[node name="DeathMenu" parent="." instance=ExtResource("2_g48nd")]
-
-[node name="PauseMenu" parent="." instance=ExtResource("5_10of6")]
-process_mode = 3
-
-[connection signal="player_death" from="Level" to="." method="_on_level_player_death"]
-[connection signal="restart" from="DeathMenu" to="Level" method="_on_death_menu_restart"]
-[connection signal="unpause" from="PauseMenu" to="." method="_on_pause_menu_unpause"]
+[node name="LevelMenu" parent="." instance=ExtResource("3_7uyx5")]

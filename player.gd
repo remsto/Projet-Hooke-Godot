@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 const ACCEL = 200.0
+const AIR_ACCEL = 60.0
 const AIR_IDLE_ACCEL = ACCEL/20.0
 const SPEED = 300.0
 const JUMP_VELOCITY = -800.0
@@ -157,7 +158,7 @@ func _physics_process(delta):
 		else:
 			# Handle direction airborne: move only if does not "slow down" the character
 			if direction and (direction*velocity.x < SPEED): 
-				velocity.x = move_toward(velocity.x, direction*SPEED, ACCEL)
+				velocity.x = move_toward(velocity.x, direction*SPEED, AIR_ACCEL)
 			if not direction: # Deceleration
 				velocity.x = move_toward(velocity.x, 0, AIR_IDLE_ACCEL)
 	if state in [State.WALL_SLIDING]: # Handle wall jump

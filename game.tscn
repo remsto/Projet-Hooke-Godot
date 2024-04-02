@@ -14,6 +14,11 @@ script = ExtResource("1_m2xdm")
 
 [node name="PauseMenu" parent="." instance=ExtResource("5_2epjg")]
 process_mode = 3
+z_index = 2
+offset_left = -576.0
+offset_top = -296.0
+offset_right = -576.0
+offset_bottom = -296.0
 
 [connection signal="player_death" from="Level" to="." method="_on_level_player_death"]
 [connection signal="restart" from="DeathMenu" to="Level" method="_on_death_menu_restart"]

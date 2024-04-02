@@ -102,6 +102,7 @@ scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_050xh")
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
+zoom = Vector2(1.5, 1.5)
 drag_horizontal_enabled = true
 
 [node name="Hook" parent="." instance=ExtResource("18_mpoit")]

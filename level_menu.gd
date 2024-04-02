@@ -1,12 +1,16 @@
 extends MarginContainer
 
 signal level_selected(level_name)
+signal back
 
 func add_level(level_name):
 	var new_button = Button.new()
 	new_button.text = level_name.split(".tscn")[0]
 	new_button.pressed.connect(_dummy_press.bind(level_name))
 	$LevelGrid.add_child(new_button)
+	
+func _on_back_button_pressed():
+	back.emit()
 
 func _dummy_press0():
 	print('zazou')
@@ -31,8 +35,10 @@ func dir_contents(path):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	dir_contents("res://Levels")
+	$BackButton.connect("pressed", _on_back_button_pressed)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	if Input.is_action_just_pressed("pause"):
+		back.emit()

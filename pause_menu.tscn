@@ -5,40 +5,41 @@
 [sub_resource type="LabelSettings" id="LabelSettings_v4lwv"]
 font_size = 64
 
-[node name="PauseMenu" type="Node2D"]
-script = ExtResource("1_om3bq")
-
-[node name="PauseLabel" type="Label" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -440.0
-offset_top = -130.5
-offset_right = 440.0
-offset_bottom = 130.5
+[node name="PauseMenu" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Pause
+theme_override_constants/margin_left = 400
+theme_override_constants/margin_right = 400
+script = ExtResource("1_om3bq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="PauseLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "
+
+Pause
+
 "
 label_settings = SubResource("LabelSettings_v4lwv")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="ContinueButton" type="Button" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -96.0
-offset_top = -128.0
-offset_right = 104.0
-offset_bottom = -72.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="ContinueButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
 text = "Reprendre"
 
-[connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]
+[node name="OptionButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="TitleButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Menu Principal"
+
+[connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]

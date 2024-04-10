@@ -30,14 +30,14 @@ func _on_pause_main_menu_pressed():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	get_window().size = Vector2i(1280, 720)
-	get_window().position = Vector2i(100, 100)
+#	get_window().size = Vector2i(1280, 720)
+#	get_window().position = Vector2i(100, 100)
 	# We do this to remove the (dummy) level from the game. To remove ?
 	game_scene = preload("res://game.tscn")
 	var GameNode = game_scene.instantiate()
-	var level_node = GameNode.find_child("Level")
-	GameNode.remove_child(level_node)
-	level_node.queue_free()
+#	var level_node = GameNode.find_child("Level")
+#	GameNode.remove_child(level_node)
+#	level_node.queue_free()
 	add_child(GameNode)
 	GameNode.set_process(false)
 	GameNode.connect("main_menu", _on_pause_main_menu_pressed)

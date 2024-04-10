@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxnaorle6s43m"]
+
+[ext_resource type="Script" path="res://hook_grapple.gd" id="1_02diu"]
+[ext_resource type="Texture2D" uid="uid://ci2r01shba2km" path="res://assets/grapple_hook.png" id="1_u6idt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5yf02"]
+size = Vector2(16, 16)
+
+[node name="HookGrapple" type="StaticBody2D"]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_02diu")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_5yf02")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_u6idt")

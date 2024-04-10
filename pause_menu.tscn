@@ -11,8 +11,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 400
-theme_override_constants/margin_right = 400
+theme_override_constants/margin_left = 300
+theme_override_constants/margin_right = 300
 script = ExtResource("1_om3bq")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -21,7 +21,6 @@ layout_mode = 2
 [node name="PauseLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 text = "
-
 Pause
 
 "

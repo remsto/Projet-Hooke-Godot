@@ -1,6 +1,7 @@
 extends Node2D
 
 signal player_death
+signal end_level
 
 var player_scene : PackedScene
 # Called when the node enters the scene tree for the first time.
@@ -29,3 +30,7 @@ func _on_player_death():
 func _on_death_zone_body_entered(body):
 	$Player.queue_free()
 	player_death.emit()
+
+
+func _on_end_tile_body_entered(body):
+	end_level.emit()

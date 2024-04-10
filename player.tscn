@@ -1,8 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://ck25q6j1wcis1"]
+[gd_scene load_steps=30 format=3 uid="uid://ck25q6j1wcis1"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_umq0i"]
+[ext_resource type="Texture2D" uid="uid://cpahixeqe6yjd" path="res://main_char_asset/Hooke_Char_Idle.png" id="2_7e08r"]
 [ext_resource type="Texture2D" uid="uid://e2gsjykakfn" path="res://thief/thief_idle_1.png" id="2_41j55"]
 [ext_resource type="Texture2D" uid="uid://qd7liyb61t8k" path="res://thief/thief_idle_2.png" id="3_mqubf"]
+[ext_resource type="Texture2D" uid="uid://6rqo7lrq4wp0" path="res://main_char_asset/hook_char_walk.png" id="3_pcjps"]
 [ext_resource type="Texture2D" uid="uid://c7ggkd4y12gos" path="res://thief/thief_idle_3.png" id="4_qvy6n"]
 [ext_resource type="Texture2D" uid="uid://2xdsxmc8d3e3" path="res://thief/thief_idle_4.png" id="5_57udg"]
 [ext_resource type="Texture2D" uid="uid://deq57t7sh4or7" path="res://thief/thief_idle_5.png" id="6_1nwcy"]
@@ -18,8 +20,62 @@
 [ext_resource type="Texture2D" uid="uid://cubngjjf4vpdb" path="res://thief/thief_walk_7.png" id="16_hke7y"]
 [ext_resource type="PackedScene" uid="uid://b6l5jcjja00vi" path="res://hook.tscn" id="18_mpoit"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_cqyxd"]
+atlas = ExtResource("2_7e08r")
+region = Rect2(0, 0, 13, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ow0sk"]
+atlas = ExtResource("2_7e08r")
+region = Rect2(13, 0, 13, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_03b7j"]
+atlas = ExtResource("2_7e08r")
+region = Rect2(26, 0, 13, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vpbrj"]
+atlas = ExtResource("2_7e08r")
+region = Rect2(39, 0, 13, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2j671"]
+atlas = ExtResource("3_pcjps")
+region = Rect2(0, 0, 13, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mosl7"]
+atlas = ExtResource("3_pcjps")
+region = Rect2(13, 0, 13, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nepok"]
+atlas = ExtResource("3_pcjps")
+region = Rect2(26, 0, 13, 25)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eafas"]
+atlas = ExtResource("3_pcjps")
+region = Rect2(39, 0, 13, 25)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_15jqo"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cqyxd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ow0sk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_03b7j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vpbrj")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("2_41j55")
@@ -46,13 +102,8 @@ animations = [{
 "texture": ExtResource("9_x2w20")
 }],
 "loop": true,
-"name": &"idle",
-"speed": 14.0
-}, {
-"frames": [],
-"loop": true,
-"name": &"jump",
-"speed": 5.0
+"name": &"old_idle",
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -77,12 +128,29 @@ animations = [{
 "texture": ExtResource("16_hke7y")
 }],
 "loop": true,
+"name": &"old_walk",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2j671")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mosl7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nepok")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eafas")
+}],
+"loop": true,
 "name": &"walk",
-"speed": 14.0
+"speed": 8.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_050xh"]
-size = Vector2(12, 15)
+size = Vector2(12, 24)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -92,20 +160,18 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 texture_repeat = 1
-scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_15jqo")
-animation = &"idle"
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(2, 0.5)
-scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_050xh")
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
-zoom = Vector2(1.5, 1.5)
-drag_horizontal_enabled = true
+position_smoothing_speed = 3.0
+editor_draw_drag_margin = true
 
 [node name="Hook" parent="." instance=ExtResource("18_mpoit")]
+collision_layer = 0
 
 [node name="DebugLabel" type="Label" parent="."]
 offset_right = 40.0

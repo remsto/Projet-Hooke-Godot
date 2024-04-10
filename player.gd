@@ -1,26 +1,27 @@
 extends CharacterBody2D
 
-const ACCEL = 200.0
-const AIR_ACCEL = 60.0
+const ACCEL = 200.0 * 60
+const AIR_ACCEL = 30.0 * 60
 const AIR_IDLE_ACCEL = ACCEL/20.0
-const SPEED = 300.0
-const JUMP_VELOCITY = -800.0
+const SPEED = 250.0
+const JUMP_VELOCITY = -600.0
 const WALL_JUMP_VELOCITY = 400.0
 const JUMP_BUFFER_SIZE = 6
 const GROUND_BUFFER_SIZE = 6
 const JUMP_DIVIDE = 3.0
-const BOOST_MULT = 1.2
-const WALL_SLIDE_THRESH_LEFT = 11.0
-const WALL_SLIDE_THRESH_RIGHT = 16.0
+const BOOST_MULT = 1.0
+const WALL_SLIDE_THRESH_LEFT = 7.0
+const WALL_SLIDE_THRESH_RIGHT = 7.0
 const RAY_CAST_LENGTH = 30.0
-const WALL_JUMP_TIME = 5
+const WALL_JUMP_TIME = 0
+const CAM_ZOOM_SPEED = 0.005
 enum State {IDLE, WALKING, # Grounded states
 			JUMPING, FALLING, # Airborne states
 			HOOK_EXTEND, HOOK_PULL, # Hook states
 			WALL_SLIDING, WALL_CLINGED} # Wall states
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") * 1.3
+var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") * 1.0
 var screen_size
 var jump_buffer : Array
 var ground_buffer : Array
@@ -29,6 +30,7 @@ var is_wall_jumping : bool
 var wall_jump_counter
 var wall_direction 
 var state = State.IDLE
+var viewport_width
 
 signal death
 
@@ -46,6 +48,7 @@ func _ready():
 		jump_buffer.append(false)
 	for i in range(GROUND_BUFFER_SIZE):
 		ground_buffer.append(false)
+	viewport_width = get_viewport().get_visible_rect().size.x
 	
 # The "buffers" here work as conveyor belt:
 # - The last value (biggest index) is removed
@@ -66,10 +69,17 @@ func reset_bool_buffer(buffer : Array) -> void:
 		
 func ray_cast(ray_length, threshold):
 	var space_state = get_world_2d().direct_space_state
-	var query = PhysicsRayQueryParameters2D.create(global_position, global_position+Vector2(ray_length, 0))
+	var query = PhysicsRayQueryParameters2D.create(global_position, global_position+Vector2(ray_length, 0), collision_mask)
 	var result = space_state.intersect_ray(query)
+#	if result:
+#		print(abs(global_position.x - result.position.x))
 	return result and abs(global_position.x - result.position.x) <= threshold
 	
+func _process(delta):
+#	if velocity.x:
+#		var cam_pos = viewport_width/4.0 if velocity.x > 0 else 0
+#		$PlayerCamera.position.x = viewport_width/4.0
+	pass
 
 func _physics_process(delta):
 	var direction = Input.get_axis("left", "right")
@@ -130,7 +140,7 @@ func _physics_process(delta):
 			
 	# Handle the physic according to the state
 	if state in [State.WALKING]: # Handle walk
-		velocity.x = move_toward(velocity.x, direction*SPEED, ACCEL)
+		velocity.x = move_toward(velocity.x, direction*SPEED, ACCEL*delta)
 	if state in [State.WALKING, State.IDLE]: # Handle Jump
 		if does_jump:
 			velocity.y = JUMP_VELOCITY
@@ -138,7 +148,7 @@ func _physics_process(delta):
 			reset_bool_buffer(ground_buffer)
 			is_ground_jumping = true
 		if not direction: # Deceleration
-			velocity.x = move_toward(velocity.x, 0, ACCEL)
+			velocity.x = move_toward(velocity.x, 0, ACCEL*delta)
 	if state in [State.WALL_CLINGED]:
 		velocity = Vector2(0.0, 0.0)
 		if does_jump:
@@ -158,9 +168,9 @@ func _physics_process(delta):
 		else:
 			# Handle direction airborne: move only if does not "slow down" the character
 			if direction and (direction*velocity.x < SPEED): 
-				velocity.x = move_toward(velocity.x, direction*SPEED, AIR_ACCEL)
+				velocity.x = move_toward(velocity.x, direction*SPEED, AIR_ACCEL*delta)
 			if not direction: # Deceleration
-				velocity.x = move_toward(velocity.x, 0, AIR_IDLE_ACCEL)
+				velocity.x = move_toward(velocity.x, 0, AIR_IDLE_ACCEL*delta)
 	if state in [State.WALL_SLIDING]: # Handle wall jump
 		if does_jump:
 			wall_jump_counter = WALL_JUMP_TIME			
@@ -195,6 +205,11 @@ func _physics_process(delta):
 			var cell_tile_data = collider.get_cell_tile_data(0, tilemap_collision_pos)
 			if cell_tile_data and cell_tile_data.get_custom_data("fatal"):
 				death.emit()
+				
+#	var zoom_factor = clamp((WALL_JUMP_VELOCITY - velocity.length())/400.0, 0.5, 1.0)
+#	var current_zoom = $PlayerCamera.get_zoom()
+#	$PlayerCamera.zoom.x = move_toward(current_zoom.x, zoom_factor, CAM_ZOOM_SPEED)
+#	$PlayerCamera.zoom.y = move_toward(current_zoom.y, zoom_factor, CAM_ZOOM_SPEED)
 	move_and_slide()
 
 

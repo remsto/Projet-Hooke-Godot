@@ -67,13 +67,21 @@ func reset_bool_buffer(buffer : Array) -> void:
 	for i in range(buffer.size()):
 		buffer[i] = false
 		
+# Perform a ray cast horizontally and return the collided object if near enough
 func ray_cast(ray_length, threshold):
 	var space_state = get_world_2d().direct_space_state
 	var query = PhysicsRayQueryParameters2D.create(global_position, global_position+Vector2(ray_length, 0), collision_mask)
 	var result = space_state.intersect_ray(query)
-#	if result:
-#		print(abs(global_position.x - result.position.x))
-	return result and abs(global_position.x - result.position.x) <= threshold
+	if result and abs(global_position.x - result.position.x) <= threshold:
+		return result
+		
+func get_collided_tilemap_data(collider):
+	if collider is TileMapLayer:
+		var collision_pos = get_last_slide_collision().get_position()
+		var tilemap_collision_pos = collider.local_to_map(collider.to_local(collision_pos))
+		var cell_tile_data = collider.get_cell_tile_data(tilemap_collision_pos)
+		return cell_tile_data
+	
 	
 func _process(delta):
 #	if velocity.x:
@@ -106,20 +114,22 @@ func _physics_process(delta):
 		else:
 			state = State.IDLE
 	else: # Not on floor
+		var ray_left = ray_cast(-RAY_CAST_LENGTH, WALL_SLIDE_THRESH_LEFT)
+		var ray_right = ray_cast(RAY_CAST_LENGTH, WALL_SLIDE_THRESH_RIGHT)
 		if state == State.WALL_CLINGED:
 			pass
 		# Raycast to handle wall slide/jump. Might be refactored ?? 
-		elif ray_cast(-RAY_CAST_LENGTH, WALL_SLIDE_THRESH_LEFT):
+		elif ray_left:
 			state = State.WALL_SLIDING
 			wall_direction = 1
-		elif ray_cast(RAY_CAST_LENGTH, WALL_SLIDE_THRESH_RIGHT):
+		elif ray_right:
 			state = State.WALL_SLIDING
 			wall_direction = -1
 		elif velocity.y < 0:
 			state = State.JUMPING
 		else:
 			state = State.FALLING
-	# Handle the "ground jump" for jump variation ONLY form the ground
+	# Handle the "ground jump" for jump variation ONLY from the ground
 	if state in [State.JUMPING, State.WALL_SLIDING] and velocity.y<0 and is_ground_jumping and\
 	 (Input.is_action_pressed("jump") or Input.is_action_just_released("jump")):
 		is_ground_jumping = true
@@ -199,10 +209,10 @@ func _physics_process(delta):
 		# Check if tile collided is fatal. Maybe too compplicated, is there a simpler way ?
 		var collider = get_last_slide_collision().get_collider()
 #		$ColliderLabel.text = str(get_last_slide_collision().get_normal())
-		if collider is TileMap:
+		if collider is TileMapLayer:
 			var collision_pos = get_last_slide_collision().get_position()
 			var tilemap_collision_pos = collider.local_to_map(collider.to_local(collision_pos))
-			var cell_tile_data = collider.get_cell_tile_data(0, tilemap_collision_pos)
+			var cell_tile_data = collider.get_cell_tile_data(tilemap_collision_pos)
 			if cell_tile_data and cell_tile_data.get_custom_data("fatal"):
 				death.emit()
 				
@@ -211,5 +221,3 @@ func _physics_process(delta):
 #	$PlayerCamera.zoom.x = move_toward(current_zoom.x, zoom_factor, CAM_ZOOM_SPEED)
 #	$PlayerCamera.zoom.y = move_toward(current_zoom.y, zoom_factor, CAM_ZOOM_SPEED)
 	move_and_slide()
-
-

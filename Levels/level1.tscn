@@ -1,9 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://81grvquows5s"]
+[gd_scene load_steps=8 format=3 uid="uid://81grvquows5s"]
 
 [ext_resource type="PackedScene" uid="uid://dvm35djc1l11a" path="res://tile_map.tscn" id="1_41rvv"]
-[ext_resource type="Script" path="res://level.gd" id="1_o128b"]
+[ext_resource type="Script" uid="uid://1ui7hyyirfw1" path="res://level.gd" id="1_o128b"]
 [ext_resource type="PackedScene" uid="uid://ck25q6j1wcis1" path="res://player.tscn" id="2_m7yv8"]
-[ext_resource type="Texture2D" uid="uid://clqnw4xrywvp7" path="res://assets/end_level_orb.png" id="4_okigb"]
+[ext_resource type="PackedScene" uid="uid://c3nqor2du0swg" path="res://end_tile.tscn" id="4_m6f6w"]
 [ext_resource type="PackedScene" uid="uid://cxnaorle6s43m" path="res://hook_grapple.tscn" id="5_jvomc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_unw81"]
@@ -11,9 +11,6 @@ size = Vector2(50000, 194)
 
 [sub_resource type="SegmentShape2D" id="SegmentShape2D_bmyeh"]
 b = Vector2(0, 2128)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_x0xbs"]
-size = Vector2(16, 16)
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_o128b")
@@ -40,17 +37,8 @@ metadata/_edit_group_ = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("SegmentShape2D_bmyeh")
 
-[node name="EndTile" type="Area2D" parent="."]
+[node name="EndTile" parent="." instance=ExtResource("4_m6f6w")]
 position = Vector2(85, 103)
-collision_layer = 0
-collision_mask = 2
-metadata/_edit_group_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EndTile"]
-shape = SubResource("RectangleShape2D_x0xbs")
-
-[node name="Sprite2D" type="Sprite2D" parent="EndTile"]
-texture = ExtResource("4_okigb")
 
 [node name="HookGrapple" parent="." instance=ExtResource("5_jvomc")]
 position = Vector2(154, 147)
@@ -63,4 +51,3 @@ position = Vector2(418, -192)
 
 [connection signal="death" from="Player" to="." method="_on_player_death"]
 [connection signal="body_entered" from="DeathZone" to="." method="_on_death_zone_body_entered"]
-[connection signal="body_entered" from="EndTile" to="." method="_on_end_tile_body_entered"]

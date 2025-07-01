@@ -1,6 +1,6 @@
 [gd_scene load_steps=30 format=3 uid="uid://ck25q6j1wcis1"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_umq0i"]
+[ext_resource type="Script" uid="uid://bpi5u4brboxup" path="res://player.gd" id="1_umq0i"]
 [ext_resource type="Texture2D" uid="uid://cpahixeqe6yjd" path="res://main_char_asset/Hooke_Char_Idle.png" id="2_7e08r"]
 [ext_resource type="Texture2D" uid="uid://e2gsjykakfn" path="res://thief/thief_idle_1.png" id="2_41j55"]
 [ext_resource type="Texture2D" uid="uid://qd7liyb61t8k" path="res://thief/thief_idle_2.png" id="3_mqubf"]

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3nqor2du0swg"]
+
+[ext_resource type="Texture2D" uid="uid://clqnw4xrywvp7" path="res://assets/end_level_orb.png" id="1_yrfjj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x0xbs"]
+size = Vector2(16, 16)
+
+[node name="EndTile" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_x0xbs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_yrfjj")
